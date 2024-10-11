@@ -1,14 +1,15 @@
 package com.up202306618.element;
 
 import com.googlecode.lanterna.TextColor;
+import com.up202306618.Arena;
 import com.up202306618.utils.Position;
 
-public class Wall extends Element {
-    private static final TextColor BACK_GROUND_COLOR = TextColor.Factory.fromString("#1D1D1D");
-    private static final TextColor FORE_GROUND_COLOR = TextColor.Factory.fromString("#000000");
-    private static final char FIGURE_CHAR = ' ';
+public class Coin extends Element {
+    private static final TextColor BACK_GROUND_COLOR = Arena.BACK_GROUND_COLOR;
+    private static final TextColor FORE_GROUND_COLOR = TextColor.Factory.fromString("#FFD700");
+    private static final char FIGURE_CHAR = 'o';
 
-    public Wall(Position position) {
+    public Coin(Position position) {
         super(position);
     }
 
@@ -29,6 +30,6 @@ public class Wall extends Element {
 
     @Override
     public String toString() {
-        return "Wall{" + this.getPosition() + '}';
+        return "Coin{" + this.getPosition() + '}';
     }
 }

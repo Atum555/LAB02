@@ -29,8 +29,8 @@ public abstract class Element {
         graphics.enableModifiers(SGR.BOLD);
         graphics.putString(
                 new TerminalPosition(
-                        offset.x() + this.getPosition().x(),
-                        offset.y() + this.getPosition().y()
+                        offset.x() + this.position.x(),
+                        offset.y() + this.position.y()
                 ),
                 String.valueOf(this.getFigureChar())
         );

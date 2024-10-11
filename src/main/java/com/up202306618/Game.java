@@ -47,24 +47,38 @@ public class Game {
         );
     }
 
-    public void close() throws IOException {
-        this.screen.close();
-        this.run = false;
-    }
-
     public void run() throws IOException {
         this.run = true;
 
         while (this.run) {
             this.draw();
             this.processKey(this.screen.readInput());
+            this.tick();
         }
+    }
+
+    public void close() throws IOException {
+        this.screen.close();
+        this.run = false;
     }
 
     private void draw() throws IOException {
         this.screen.clear();
         this.arena.draw(screen.newTextGraphics());
         this.screen.refresh();
+    }
+
+    private void drawLost() throws IOException {
+        this.screen.clear();
+        this.arena.drawLost(screen.newTextGraphics());
+        this.screen.refresh();
+    }
+
+    private void tick() throws IOException {
+        if (!this.arena.tick()) {
+            this.run = false;
+            this.drawLost();
+        }
     }
 
     private void processKey(KeyStroke key) throws IOException {
