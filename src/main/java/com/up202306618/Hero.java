@@ -2,21 +2,20 @@ package com.up202306618;
 
 import com.googlecode.lanterna.TextCharacter;
 import com.googlecode.lanterna.screen.Screen;
+import com.up202306618.utils.Position;
 
 import java.util.Objects;
 
 public class Hero {
-    private int x;
-    private int y;
+    private Position position;
 
-    Hero(int x, int y) {
-        this.x = x;
-        this.y = y;
+    Hero (Position position) {
+        this.position = position;
     }
 
     public void draw(Screen screen) {
-        int x = this.x % screen.getTerminalSize().getColumns();
-        int y = this.y % screen.getTerminalSize().getRows();
+        int x = this.position.x() % screen.getTerminalSize().getColumns();
+        int y = -this.position.y() % screen.getTerminalSize().getRows();
         if (x < 0) x += screen.getTerminalSize().getColumns();
         if (y < 0) y += screen.getTerminalSize().getRows();
 
@@ -24,36 +23,37 @@ public class Hero {
     }
 
     public void moveUp() {
-        this.y--;
+        this.position.moveUp();
     }
 
     public void moveDown() {
-        this.y++;
+        this.position.moveDown();
     }
 
     public void modeRight() {
-        this.x++;
+        this.position.moveRight();
     }
 
     public void modeLeft() {
-        this.x--;
+        this.position.moveLeft();
     }
+
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Hero hero = (Hero) o;
-        return x == hero.x && y == hero.y;
+        return Objects.equals(position, hero.position);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(x, y);
+        return Objects.hashCode(position);
     }
 
     @Override
     public String toString() {
-        return "Hero{" + "x=" + x + ", y=" + y + '}';
+        return "Hero{" + position + '}';
     }
 }

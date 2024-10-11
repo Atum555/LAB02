@@ -6,6 +6,7 @@ import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.swing.SwingTerminalFontConfiguration;
+import com.up202306618.utils.Position;
 
 import java.io.IOException;
 
@@ -26,7 +27,7 @@ public class Game {
         this.screen.setCursorPosition(null);
         this.screen.startScreen();
         this.screen.doResizeIfNecessary();
-        this.hero = new Hero(0,0);
+        this.hero = new Hero(new Position(0,0));
     }
 
     public void close() throws IOException {
@@ -47,6 +48,7 @@ public class Game {
     private void draw() throws IOException {
         this.screen.clear();
         this.hero.draw(this.screen);
+        System.out.println(this.hero);
         this.screen.refresh();
     }
 
