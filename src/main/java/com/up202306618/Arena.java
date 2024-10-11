@@ -57,6 +57,22 @@ public class Arena {
 
     public void processCharacter(char c) {
         switch (c) {
+            case 'w':
+            case 'W':
+                moveHero(Direction.UP);
+                break;
+            case 's':
+            case 'S':
+                moveHero(Direction.DOWN);
+                break;
+            case 'd':
+            case 'D':
+                moveHero(Direction.RIGHT);
+                break;
+            case 'a':
+            case 'A':
+                moveHero(Direction.LEFT);
+                break;
             default:
         }
     }
