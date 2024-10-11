@@ -1,7 +1,6 @@
 package com.up202306618;
 
 import com.googlecode.lanterna.TerminalSize;
-import com.googlecode.lanterna.TextCharacter;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
@@ -15,8 +14,7 @@ public class Game {
     private static final int HEIGHT = 30;
     private final Screen screen;
     private boolean run;
-    private int x = 10;
-    private int y = 10;
+    private final Hero hero;
 
     Game() throws IOException {
         this.screen = new DefaultTerminalFactory()
@@ -28,6 +26,7 @@ public class Game {
         this.screen.setCursorPosition(null);
         this.screen.startScreen();
         this.screen.doResizeIfNecessary();
+        this.hero = new Hero(0,0);
     }
 
     public void close() throws IOException {
@@ -47,7 +46,7 @@ public class Game {
 
     private void draw() throws IOException {
         this.screen.clear();
-        this.screen.setCharacter(this.x, this.y, TextCharacter.fromCharacter('X')[0]);
+        this.hero.draw(this.screen);
         this.screen.refresh();
     }
 
@@ -60,16 +59,16 @@ public class Game {
                 this.close();
                 break;
             case KeyType.ArrowUp:
-                this.y--;
+                this.hero.moveUp();
                 break;
             case KeyType.ArrowDown:
-                this.y++;
-                break;
-            case KeyType.ArrowLeft:
-                this.x--;
+                this.hero.moveDown();
                 break;
             case KeyType.ArrowRight:
-                this.x++;
+                this.hero.modeRight();
+                break;
+            case KeyType.ArrowLeft:
+                this.hero.modeLeft();
                 break;
         }
     }
