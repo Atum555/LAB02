@@ -1,7 +1,10 @@
 package com.up202306618;
 
+import com.googlecode.lanterna.SGR;
+import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TextCharacter;
-import com.googlecode.lanterna.screen.Screen;
+import com.googlecode.lanterna.TextColor;
+import com.googlecode.lanterna.graphics.TextGraphics;
 import com.up202306618.utils.Position;
 
 import java.util.Objects;
@@ -13,12 +16,16 @@ public class Hero {
         this.position = position;
     }
 
-    public void draw(Screen screen, Position offset) {
+    public void draw(TextGraphics graphics, Position offset) {
         System.out.println(" Hero: " + this.position);
-        screen.setCharacter(
-                offset.x() + this.position.x(),
-                offset.y() + this.position.y(),
-                TextCharacter.fromCharacter('X')[0]
+        graphics.setForegroundColor(TextColor.Factory.fromString("#ef45ef"));
+        graphics.enableModifiers(SGR.BOLD);
+        graphics.putString(
+                new TerminalPosition(
+                        offset.x() + this.position.x(),
+                        offset.y() + this.position.y()
+                ),
+                "X"
         );
     }
 

@@ -1,13 +1,16 @@
 package com.up202306618;
 
+import com.googlecode.lanterna.TerminalPosition;
+import com.googlecode.lanterna.TerminalSize;
+import com.googlecode.lanterna.TextColor;
+import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
-import com.googlecode.lanterna.screen.Screen;
 import com.up202306618.utils.Position;
 
 public class Arena {
     private final Position positionOffset;
-    private final int LENGTH;
+    private final int WIDTH;
     private final int HEIGHT;
     private final Hero hero;
 
@@ -20,13 +23,19 @@ public class Arena {
 
     Arena(Position position, int length, int height) {
         this.positionOffset = position;
-        this.LENGTH = length;
+        this.WIDTH = length;
         this.HEIGHT = height;
         this.hero = new Hero(new Position(0, 0));
     }
 
-    public void draw(Screen screen) {
-        this.hero.draw(screen, this.positionOffset);
+    public void draw(TextGraphics graphics) {
+        graphics.setBackgroundColor(TextColor.Factory.fromString("#1f4220"));
+        graphics.fillRectangle(
+                new TerminalPosition(this.positionOffset.x(), this.positionOffset.y()),
+                new TerminalSize(WIDTH, HEIGHT),
+                ' '
+        );
+        this.hero.draw(graphics, this.positionOffset);
     }
 
     public void processKey(KeyStroke key) {
@@ -74,6 +83,6 @@ public class Arena {
     private boolean isInside(Position position) {
         int x = position.x();
         int y = position.y();
-        return x >= 0 && x < LENGTH && y >= 0 && y < HEIGHT;
+        return x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT;
     }
 }

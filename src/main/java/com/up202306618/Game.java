@@ -13,7 +13,7 @@ import java.io.IOException;
 import static java.lang.Math.floor;
 
 public class Game {
-    private static final int LENGTH = 90;
+    private static final int WIDTH = 90;
     private static final int HEIGHT = 30;
     private final Screen screen;
     private final Arena arena;
@@ -21,7 +21,7 @@ public class Game {
 
     Game() throws IOException {
         this.screen = new DefaultTerminalFactory()
-                .setInitialTerminalSize(new TerminalSize(LENGTH, HEIGHT))
+                .setInitialTerminalSize(new TerminalSize(WIDTH, HEIGHT))
                 .setTerminalEmulatorFontConfiguration(
                         SwingTerminalFontConfiguration.getDefaultOfSize(20)
                 )
@@ -30,12 +30,12 @@ public class Game {
         this.screen.startScreen();
         this.screen.doResizeIfNecessary();
 
-        int borderLength = (int) floor(LENGTH * 0.05);
+        int borderLength = (int) floor(WIDTH * 0.05);
         int borderHeight = (int) floor(HEIGHT * 0.05);
         if (borderLength % 2 == 1) borderLength++;
         if (borderHeight % 2 == 1) borderHeight++;
 
-        int arenaLength = LENGTH - 2 * borderLength;
+        int arenaLength = WIDTH - 2 * borderLength;
         int arenaHeight = HEIGHT - 2 * borderHeight;
 
         this.arena = new Arena(
@@ -61,7 +61,7 @@ public class Game {
 
     private void draw() throws IOException {
         this.screen.clear();
-        this.arena.draw(this.screen);
+        this.arena.draw(screen.newTextGraphics());
         this.screen.refresh();
     }
 
