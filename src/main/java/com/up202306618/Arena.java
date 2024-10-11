@@ -6,6 +6,8 @@ import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
+import com.up202306618.element.Hero;
+import com.up202306618.element.Wall;
 import com.up202306618.utils.Position;
 
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ public class Arena {
         RIGHT
     }
 
-    Arena(Position arenaOffset, int length, int height) {
+    protected Arena(Position arenaOffset, int length, int height) {
         this.arenaOffset = arenaOffset;
         this.WIDTH = length;
         this.HEIGHT = height;
@@ -114,7 +116,7 @@ public class Arena {
                 heroPosition.moveLeft();
                 break;
         }
-        if (this.isValid(heroPosition)) this.hero.setPosition(heroPosition);
+        if (this.isValid(heroPosition)) this.hero.moveTo(heroPosition);
     }
 
     private boolean isValid(Position position) {

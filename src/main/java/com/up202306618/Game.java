@@ -21,7 +21,7 @@ public class Game {
 
     private final Arena arena;
 
-    Game() throws IOException {
+    public Game() throws IOException {
         this.screen = new DefaultTerminalFactory()
                 .setInitialTerminalSize(new TerminalSize(WIDTH, HEIGHT))
                 .setTerminalEmulatorFontConfiguration(
