@@ -15,9 +15,11 @@ import static java.lang.Math.floor;
 public class Game {
     private static final int WIDTH = 90;
     private static final int HEIGHT = 30;
+
     private final Screen screen;
-    private final Arena arena;
     private boolean run;
+
+    private final Arena arena;
 
     Game() throws IOException {
         this.screen = new DefaultTerminalFactory()

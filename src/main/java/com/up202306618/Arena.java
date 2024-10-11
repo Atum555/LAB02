@@ -8,11 +8,20 @@ import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.up202306618.utils.Position;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Arena {
-    private final Position positionOffset;
+    public static final TextColor BACK_GROUND_COLOR = TextColor.Factory.fromString("#1f4220");
+    public static final TextColor FORE_GROUND_COLOR = TextColor.Factory.fromString("#000000");
+    private static final char FIGURE_CHAR = ' ';
+
+    private final Position arenaOffset;
     private final int WIDTH;
     private final int HEIGHT;
+
     private final Hero hero;
+    private final List<Wall> walls;
 
     enum Direction {
         UP,
@@ -21,21 +30,33 @@ public class Arena {
         RIGHT
     }
 
-    Arena(Position position, int length, int height) {
-        this.positionOffset = position;
+    Arena(Position arenaOffset, int length, int height) {
+        this.arenaOffset = arenaOffset;
         this.WIDTH = length;
         this.HEIGHT = height;
-        this.hero = new Hero(new Position(0, 0));
+
+        // Create Assets
+        this.walls = this.createWalls();
+
+        // Create Hero
+        Position heroPosition;
+        do heroPosition = Position.random(WIDTH, HEIGHT);
+        while (!isValid(heroPosition));
+        this.hero = new Hero(heroPosition);
     }
 
     public void draw(TextGraphics graphics) {
-        graphics.setBackgroundColor(TextColor.Factory.fromString("#1f4220"));
+        graphics.setBackgroundColor(BACK_GROUND_COLOR);
+        graphics.setForegroundColor(FORE_GROUND_COLOR);
         graphics.fillRectangle(
-                new TerminalPosition(this.positionOffset.x(), this.positionOffset.y()),
+                new TerminalPosition(this.arenaOffset.x(), this.arenaOffset.y()),
                 new TerminalSize(WIDTH, HEIGHT),
                 ' '
         );
-        this.hero.draw(graphics, this.positionOffset);
+
+        for (Wall wall : walls) wall.draw(graphics, this.arenaOffset);
+
+        this.hero.draw(graphics, this.arenaOffset);
     }
 
     public void processKey(KeyStroke key) {
@@ -93,12 +114,27 @@ public class Arena {
                 heroPosition.moveLeft();
                 break;
         }
-        if (this.isInside(heroPosition)) this.hero.setPosition(heroPosition);
+        if (this.isValid(heroPosition)) this.hero.setPosition(heroPosition);
     }
 
-    private boolean isInside(Position position) {
+    private boolean isValid(Position position) {
         int x = position.x();
         int y = position.y();
-        return x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT;
+        if (!(x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT)) return false;
+        for (Wall wall : walls) if (wall.getPosition().equals(position)) return false;
+        return true;
+    }
+
+    private List<Wall> createWalls() {
+        List<Wall> walls = new ArrayList<>();
+        for (int c = 0; c < WIDTH; c++) {
+            walls.add(new Wall(new Position(c, 0)));
+            walls.add(new Wall(new Position(c, HEIGHT - 1)));
+        }
+        for (int r = 1; r < HEIGHT - 1; r++) {
+            walls.add(new Wall(new Position(0, r)));
+            walls.add(new Wall(new Position(WIDTH - 1, r)));
+        }
+        return walls;
     }
 }

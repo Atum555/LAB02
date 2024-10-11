@@ -8,19 +8,18 @@ import com.up202306618.utils.Position;
 
 import java.util.Objects;
 
-public class Hero {
-    private static final TextColor BACK_GROUND_COLOR = Arena.BACK_GROUND_COLOR;
-    private static final TextColor FORE_GROUND_COLOR = TextColor.Factory.fromString("#ef45ef");
-    private static final char FIGURE_CHAR = 'X';
+public class Wall {
+    private static final TextColor BACK_GROUND_COLOR = TextColor.Factory.fromString("#1d1d1d");
+    private static final TextColor FORE_GROUND_COLOR = TextColor.Factory.fromString("#000000");
+    private static final char FIGURE_CHAR = ' ';
 
-    private Position position;
+    private final Position position;
 
-    Hero(Position position) {
+    Wall(Position position) {
         this.position = position;
     }
 
     public void draw(TextGraphics graphics, Position offset) {
-        System.out.println(" Hero: " + this.position);
         graphics.setBackgroundColor(BACK_GROUND_COLOR);
         graphics.setForegroundColor(FORE_GROUND_COLOR);
         graphics.enableModifiers(SGR.BOLD);
@@ -34,19 +33,15 @@ public class Hero {
     }
 
     public Position getPosition() {
-        return new Position(this.position.x(), this.position.y());
-    }
-
-    public void setPosition(Position position) {
-        this.position = position;
+        return  new Position(this.position.x(), this.position.y());
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Hero hero = (Hero) o;
-        return Objects.equals(position, hero.position);
+        Wall wall = (Wall) o;
+        return Objects.equals(position, wall.position);
     }
 
     @Override
@@ -56,6 +51,6 @@ public class Hero {
 
     @Override
     public String toString() {
-        return "Hero{" + position + '}';
+        return "Wall{" + "position=" + position + '}';
     }
 }
