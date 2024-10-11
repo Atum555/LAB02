@@ -9,35 +9,26 @@ import java.util.Objects;
 public class Hero {
     private Position position;
 
-    Hero (Position position) {
+    Hero(Position position) {
         this.position = position;
     }
 
-    public void draw(Screen screen) {
-        int x = this.position.x() % screen.getTerminalSize().getColumns();
-        int y = -this.position.y() % screen.getTerminalSize().getRows();
-        if (x < 0) x += screen.getTerminalSize().getColumns();
-        if (y < 0) y += screen.getTerminalSize().getRows();
-
-        screen.setCharacter(x, y, TextCharacter.fromCharacter('X')[0]);
+    public void draw(Screen screen, Position offset) {
+        System.out.println(" Hero: " + this.position);
+        screen.setCharacter(
+                offset.x() + this.position.x(),
+                offset.y() + this.position.y(),
+                TextCharacter.fromCharacter('X')[0]
+        );
     }
 
-    public void moveUp() {
-        this.position.moveUp();
+    public Position getPosition() {
+        return new Position(this.position.x(), this.position.y());
     }
 
-    public void moveDown() {
-        this.position.moveDown();
+    public void setPosition(Position position) {
+        this.position = position;
     }
-
-    public void modeRight() {
-        this.position.moveRight();
-    }
-
-    public void modeLeft() {
-        this.position.moveLeft();
-    }
-
 
     @Override
     public boolean equals(Object o) {

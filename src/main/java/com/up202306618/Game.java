@@ -10,12 +10,14 @@ import com.up202306618.utils.Position;
 
 import java.io.IOException;
 
+import static java.lang.Math.floor;
+
 public class Game {
     private static final int LENGTH = 90;
     private static final int HEIGHT = 30;
     private final Screen screen;
+    private final Arena arena;
     private boolean run;
-    private final Hero hero;
 
     Game() throws IOException {
         this.screen = new DefaultTerminalFactory()
@@ -27,7 +29,20 @@ public class Game {
         this.screen.setCursorPosition(null);
         this.screen.startScreen();
         this.screen.doResizeIfNecessary();
-        this.hero = new Hero(new Position(0,0));
+
+        int borderLength = (int) floor(LENGTH * 0.05);
+        int borderHeight = (int) floor(HEIGHT * 0.05);
+        if (borderLength % 2 == 1) borderLength++;
+        if (borderHeight % 2 == 1) borderHeight++;
+
+        int arenaLength = LENGTH - 2 * borderLength;
+        int arenaHeight = HEIGHT - 2 * borderHeight;
+
+        this.arena = new Arena(
+                new Position(borderLength, borderHeight),
+                arenaLength,
+                arenaHeight
+        );
     }
 
     public void close() throws IOException {
@@ -42,13 +57,11 @@ public class Game {
             this.draw();
             this.processKey(this.screen.readInput());
         }
-
     }
 
     private void draw() throws IOException {
         this.screen.clear();
-        this.hero.draw(this.screen);
-        System.out.println(this.hero);
+        this.arena.draw(this.screen);
         this.screen.refresh();
     }
 
@@ -60,18 +73,8 @@ public class Game {
             case KeyType.EOF:
                 this.close();
                 break;
-            case KeyType.ArrowUp:
-                this.hero.moveUp();
-                break;
-            case KeyType.ArrowDown:
-                this.hero.moveDown();
-                break;
-            case KeyType.ArrowRight:
-                this.hero.modeRight();
-                break;
-            case KeyType.ArrowLeft:
-                this.hero.modeLeft();
-                break;
+            default:
+                this.arena.processKey(key);
         }
     }
 
@@ -81,6 +84,8 @@ public class Game {
             case 'q':
                 this.close();
                 break;
+            default:
+                this.arena.processCharacter(c);
         }
     }
 }
