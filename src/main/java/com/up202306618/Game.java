@@ -32,11 +32,54 @@ public class Game {
 
     public void close() throws IOException {
         this.screen.close();
+        this.run = false;
     }
 
-    public void run() {
+    public void run() throws IOException {
+        this.run = true;
+
+        while (this.run) {
+            this.draw();
+            this.processKey(this.screen.readInput());
+        }
+
     }
 
-    private void draw() {
+    private void draw() throws IOException {
+        this.screen.clear();
+        this.screen.setCharacter(this.x, this.y, TextCharacter.fromCharacter('X')[0]);
+        this.screen.refresh();
+    }
+
+    private void processKey(KeyStroke key) throws IOException {
+        switch (key.getKeyType()) {
+            case KeyType.Character:
+                this.processCharacter(key.getCharacter());
+                break;
+            case KeyType.EOF:
+                this.close();
+                break;
+            case KeyType.ArrowUp:
+                this.y--;
+                break;
+            case KeyType.ArrowDown:
+                this.y++;
+                break;
+            case KeyType.ArrowLeft:
+                this.x--;
+                break;
+            case KeyType.ArrowRight:
+                this.x++;
+                break;
+        }
+    }
+
+    private void processCharacter(char c) throws IOException {
+        switch (c) {
+            case 'Q':
+            case 'q':
+                this.close();
+                break;
+        }
     }
 }
