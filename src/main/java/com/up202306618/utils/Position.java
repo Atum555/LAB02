@@ -1,6 +1,7 @@
 package com.up202306618.utils;
 
 import java.util.Objects;
+import java.util.Random;
 
 public class Position {
     private int x;
@@ -39,6 +40,13 @@ public class Position {
 
     public void moveLeft() {
         this.x--;
+    }
+
+    public static Position random(int width, int height) {
+        return new Position(
+                new Random().nextInt(width),
+                new Random().nextInt(height)
+        );
     }
 
     @Override
