@@ -42,6 +42,20 @@ public class Position {
         this.x--;
     }
 
+    public Position plus(Position position) {
+        return new Position(
+                this.x + position.x,
+                this.y + position.y
+        );
+    }
+
+    public Position minus(Position position) {
+        return new Position(
+                this.x - position.x,
+                this.y - position.y
+        );
+    }
+
     public static Position random(int width, int height) {
         return new Position(
                 new Random().nextInt(width),

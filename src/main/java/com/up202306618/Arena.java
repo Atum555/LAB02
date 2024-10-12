@@ -9,6 +9,7 @@ import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.up202306618.element.Coin;
 import com.up202306618.element.Hero;
+import com.up202306618.element.Monster;
 import com.up202306618.element.Wall;
 import com.up202306618.utils.Position;
 
@@ -26,10 +27,12 @@ public class Arena {
     private final int WIDTH;
     private final int HEIGHT;
     private final int COIN_COUNT;
+    private final int MONSTER_COUNT;
 
     private final Hero hero;
     private final List<Wall> walls;
     private final List<Coin> coins;
+    private final List<Monster> monsters;
 
     enum Direction {
         UP,
@@ -44,12 +47,15 @@ public class Arena {
         this.HEIGHT = height;
 
         this.COIN_COUNT = (int) (WIDTH * HEIGHT * 0.03);
+        this.MONSTER_COUNT = (int) (WIDTH * HEIGHT * 0.003);
 
         // Create Assets
         this.walls = new ArrayList<>();
         this.coins = new ArrayList<>();
+        this.monsters = new ArrayList<>();
         this.createWalls();
         this.createCoins();
+        this.createMonsters();
 
         // Create Hero
         Position heroPosition;
@@ -61,6 +67,29 @@ public class Arena {
     public boolean tick() {
         if (!this.hero.isAlive()) return false;
         while (this.coins.size() < COIN_COUNT) this.addCoin();
+
+        Position heroPosition = this.hero.getPosition();
+        for (Monster monster : this.monsters) {
+            Position monsterPosition = monster.getPosition();
+            final Position vector = heroPosition.minus(monsterPosition);
+            final double angle = Math.atan2(vector.y(), vector.x());
+
+            if (angle >= -Math.PI / 4 && angle <= Math.PI / 4)
+                monsterPosition.moveRight();
+            else if (angle > Math.PI / 4 && angle <= Math.PI * 3 / 4)
+                monsterPosition.moveDown();
+            else if (angle < -Math.PI / 4 && angle >= -Math.PI * 3 / 4)
+                monsterPosition.moveUp();
+            else
+                monsterPosition.moveLeft();
+
+            if (this.isPositionFree(monsterPosition) || this.isPositionCoin(monsterPosition)) {
+                monster.moveTo(monsterPosition);
+            } else if (this.hero.getPosition().equals(monsterPosition)) {
+                this.hero.hitMonster();
+            }
+        }
+
         return true;
     }
 
@@ -75,6 +104,7 @@ public class Arena {
 
         for (Wall wall : this.walls) wall.draw(graphics, this.arenaOffset);
         for (Coin coin : this.coins) coin.draw(graphics, this.arenaOffset);
+        for (Monster monster : this.monsters) monster.draw(graphics, this.arenaOffset);
 
         this.hero.draw(graphics, this.arenaOffset);
     }
@@ -158,6 +188,8 @@ public class Arena {
             this.removeCoin(heroPosition);
             this.hero.coinCaught();
             this.hero.moveTo(heroPosition);
+        } else if (this.isPositionMonster(heroPosition)) {
+            this.hero.hitMonster();
         }
     }
 
@@ -167,11 +199,17 @@ public class Arena {
         if (!(x >= 0 && x < this.WIDTH && y >= 0 && y < this.HEIGHT)) return false;
         for (Wall wall : this.walls) if (wall.getPosition().equals(position)) return false;
         for (Coin coin : this.coins) if (coin.getPosition().equals(position)) return false;
+        for (Monster monster : this.monsters) if (monster.getPosition().equals(position)) return false;
         return true;
     }
 
     private boolean isPositionCoin(Position position) {
         for (Coin coin : this.coins) if (coin.getPosition().equals(position)) return true;
+        return false;
+    }
+
+    private boolean isPositionMonster(Position position) {
+        for (Monster monster : this.monsters) if (monster.getPosition().equals(position)) return true;
         return false;
     }
 
@@ -188,6 +226,15 @@ public class Arena {
 
     private void createCoins() {
         for (int i = 0; i < this.COIN_COUNT; i++) this.addCoin();
+    }
+
+    private void createMonsters() {
+        for (int i = 0; i < this.MONSTER_COUNT; i++) {
+            Position mosnterPosition;
+            do mosnterPosition = Position.random(WIDTH, HEIGHT);
+            while (!this.isPositionFree(mosnterPosition));
+            this.monsters.add(new Monster(mosnterPosition));
+        }
     }
 
     private void addCoin() {

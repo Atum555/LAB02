@@ -24,6 +24,10 @@ public class Hero extends Element implements Movable {
         return health > 0;
     }
 
+    public void hitMonster() {
+        this.health = 0;
+    }
+
     @Override
     public void moveTo(Position position) {
         this.setPosition(position);
