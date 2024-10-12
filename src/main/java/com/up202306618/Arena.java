@@ -70,6 +70,7 @@ public class Arena {
 
         Position heroPosition = this.hero.getPosition();
         for (Monster monster : this.monsters) {
+            monster.tick();
             Position monsterPosition = monster.getPosition();
             final Position vector = heroPosition.minus(monsterPosition);
             final double angle = Math.atan2(vector.y(), vector.x());
